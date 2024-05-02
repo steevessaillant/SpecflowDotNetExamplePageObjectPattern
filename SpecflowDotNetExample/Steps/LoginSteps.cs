@@ -4,6 +4,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SpecflowDotNetExample.Pages;
 using System;
+using System.IO;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -18,13 +19,23 @@ namespace SpecflowDotNetExample.Steps
         [BeforeScenario]
         public void Setup()
         {
-            this.driver = new ChromeDriver();
+            // Get the full path of the source code file
+            string sourceCodeFilePath = typeof(LoginSteps).Assembly.Location;
+
+            // Get the directory of the source code file
+            string assemblyPath = Path.GetDirectoryName(sourceCodeFilePath);
+
+            // Get the directory two levels above the source code directory
+            string sourceCodeDirectory = Directory.GetParent(Directory.GetParent(assemblyPath).FullName).FullName;
+
+
+            this.driver = new ChromeDriver(sourceCodeDirectory);
             this.page = new LoginPage(driver);
         }
         [Given(@"I navigate to application")]
         public void GivenINavigateToApplication()
         {
-            driver.Navigate().GoToUrl("http://executeautomation.com/demosite/Login.html");
+            driver.Navigate().GoToUrl("https://www.demoblaze.com/index.html");
         }
 
         [Given(@"I enter username and password")]
